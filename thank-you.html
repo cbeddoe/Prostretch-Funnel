@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You - ProStretch Z</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Thank you for claiming your ProStretch Z guide. Book a telehealth session now!">
+</head>
+<body class="bg-white font-sans">
+  <!-- Header -->
+  <header class="bg-blue-900 text-white py-4">
+    <div class="container mx-auto text-center">
+      <h1 class="text-2xl font-bold uppercase">Medi-Dyne</h1>
+      <h2 class="text-xl font-semibold mt-2">Thank You!</h2>
+    </div>
+  </header>
+
+  <!-- Confirmation Section -->
+  <section class="py-12 bg-blue-900 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-2xl font-bold mb-6">Your Free Guide Is On Its Way!</h2>
+      <p class="text-gray-200 mb-8">Check your email for your 5 expert exercises to maximize your ProStretch Z.</p>
+      <p class="text-gray-200 mb-8">Want personalized guidance? Book a 1:1 telehealth session with our expert PT team to optimize your mobility.</p>
+    </div>
+  </section>
+
+  <!-- Calendly Embed -->
+  <section class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Book Your Session Now</h2>
+      <div class="calendly-inline-widget" data-url="https://calendly.com/chris-caretoyouhealth/30min" style="min-width:320px;height:630px;"></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    </div>
+  </section>
+
+  <!-- Optional Form -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4 max-w-lg">
+      <h2 class="text-xl font-bold text-center mb-6 text-gray-800">Tell Us Your Goals (Optional)</h2>
+      <form action="/submit-goals" method="POST" class="space-y-4">
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input type="tel" id="phone" name="phone" class="mt-1 block w-full p-2 border rounded-md">
+        </div>
+        <div>
+          <label for="goals" class="block text-sm font-medium text-gray-700">What mobility goals are you working toward?</label>
+          <textarea id="goals" name="goals" class="mt-1 block w-full p-2 border rounded-md" rows="4"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600">Submit</button>
+      </form>
+      <p class="text-xs text-center mt-4 text-gray-600">This helps us prepare for your session and is not a medical assessment.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>© 2025 Medi-Dyne. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
