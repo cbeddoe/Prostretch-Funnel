@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Your Telehealth Session - ProStretch Z</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <meta name="description" content="Book your telehealth session, sign the waiver, and complete payment.">
+</head>
+<body class="bg-white font-sans">
+  <!-- Header -->
+  <header class="bg-blue-900 text-white py-4">
+    <div class="container mx-auto text-center">
+      <h1 class="text-2xl font-bold uppercase">Medi-Dyne</h1>
+      <h2 class="text-xl font-semibold mt-2">Book Your Telehealth Session</h2>
+    </div>
+  </header>
+
+  <!-- Calendly Embed -->
+  <section class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Select Your Session Time</h2>
+      <div class="calendly-inline-widget" data-url="https://calendly.com/chris-caretoyouhealth" style="min-width:320px;height:630px;"></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    </div>
+  </section>
+
+  <!-- Waiver Signing (JotForm) -->
+  <section class="py-12 bg-blue-900 text-white">
+    <div class="container mx-auto px-4 max-w-4xl text-center">
+      <h2 class="text-2xl font-bold mb-6">Sign the Waiver</h2>
+      <p class="text-gray-200 mb-8">Please sign the waiver to proceed with your booking. This ensures compliance with telehealth regulations.</p>
+      <iframe id="jotform-waiver" src="YOUR_JOTFORM_URL" frameborder="0" style="width:100%;height:600px;"></iframe>
+      <button id="waiver-signed-btn" class="mt-4 bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600" disabled>I Have Signed the Waiver</button>
+    </div>
+  </section>
+
+  <!-- Payment (Stripe) -->
+  <section class="bg-white py-12">
+    <div class="container mx-auto px-4 max-w-lg">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Complete Your Payment</h2>
+      <p class="text-center mb-8 text-gray-600">Your telehealth session fee is $100. Please enter your payment details below.</p>
+      <div id="payment-form">
+        <div id="card-element" class="p-2 border rounded-md mb-4"></div>
+        <div id="card-errors" class="text-red-600 text-sm text-center mb-4"></div>
+        <button id="submit-payment" class="w-full bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600" disabled>Pay $100</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Optional Goals -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4 max-w-lg">
+      <h2 class="text-xl font-bold text-center mb-6 text-gray-800">Tell Us Your Goals (Optional)</h2>
+      <form id="goals-form" action="/submit-goals" method="POST" class="space-y-4">
+        <div>
+          <label for="goals" class="block text-sm font-medium text-gray-700">What mobility goals are you working toward?</label>
+          <textarea id="goals" name="goals" class="mt-1 block w-full p-2 border rounded-md" rows="4"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600">Submit Goals</button>
+      </form>
+      <p class="text-xs text-center mt-4 text-gray-600">This helps us prepare for your session and is not a medical assessment.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>© 2025 Medi-Dyne. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Stripe Integration Script -->
+  <script>
+    const stripe = Stripe('pk_test_YOUR_STRIPE_PUBLISHABLE_KEY');
+    const elements = stripe.elements();
+    const card = elements.create('card', { style: { base: { fontSize: '16px' } } });
+    card.mount('#card-element');
+
+    const waiverButton = document.getElementById('waiver-signed-btn');
+    const paymentButton = document.getElementById('submit-payment');
+
+    // Enable waiver button after iframe interaction (simulated check)
+    document.getElementById('jotform-waiver').onload = () => {
+      setTimeout(() => {
+        waiverButton.disabled = false;
+        waiverButton.textContent = 'I Have Signed the Waiver';
+      }, 5000); // Simulate user signing after 5 seconds
+    };
+
+    waiverButton.addEventListener('click', () => {
+      paymentButton.disabled = false;
+      waiverButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+      waiverButton.textContent = 'Waiver Signed';
+    });
+
+    card.addEventListener('change', (event) => {
+      const displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    paymentButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      paymentButton.disabled = true;
+      paymentButton.textContent = 'Processing...';
+
+      const { paymentIntent, error } = await stripe.createPaymentIntent({
+        amount: 10000, // $100 in cents
+        currency: 'usd',
+        payment_method_types: ['card'],
+        payment_method_data: {
+          type: 'card',
+          card: card,
+        },
+      });
+
+      if (error) {
+        document.getElementById('card-errors').textContent = error.message;
+        paymentButton.disabled = false;
+        paymentButton.textContent = 'Pay $100';
+      } else {
+        // Redirect to confirmation page on success
+        window.location.href = '/confirmation.html';
+      }
+    });
+  </script>
+</body>
+</html>
